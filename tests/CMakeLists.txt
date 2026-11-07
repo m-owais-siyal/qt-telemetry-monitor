@@ -1,0 +1,7 @@
+qt_add_executable(tst_telemetrypacket tst_telemetrypacket.cpp)
+target_link_libraries(tst_telemetrypacket PRIVATE telemetry_common Qt6::Test)
+add_test(NAME tst_telemetrypacket COMMAND tst_telemetrypacket)
+
+qt_add_executable(tst_sequencetracker tst_sequencetracker.cpp)
+target_link_libraries(tst_sequencetracker PRIVATE telemetry_common Qt6::Test)
+add_test(NAME tst_sequencetracker COMMAND tst_sequencetracker)

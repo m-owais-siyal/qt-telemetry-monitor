@@ -1,0 +1,16 @@
+# Build output
+build/
+build-*/
+out/
+
+# Qt Creator
+*.user
+*.user.*
+CMakeLists.txt.user*
+.qtcreator/
+*.autosave
+
+# Visual Studio / CMake
+.vs/
+CMakeUserPresets.json
+compile_commands.json

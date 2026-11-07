@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.11 REQUIRED COMPONENTS Core Network Quick Graphs Test)
 qt_standard_project_setup(REQUIRES 6.11)
 
+# Put every QML module under one import path so tooling (qmllint, Qt Creator) finds them.
+set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
+
 enable_testing()
 
 add_subdirectory(common)

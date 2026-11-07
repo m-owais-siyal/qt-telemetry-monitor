@@ -11,7 +11,7 @@ struct TelemetrySample
 {
     quint32 sequence = 0;
     qint64 timestampMs = 0;          // sender clock, milliseconds since the Unix epoch
-    std::array<float, 3> channels{}; // temperature (°C), pressure (kPa), voltage (V)
+    std::array<float, 3> channels{}; // temperature (degrees C), pressure (kPa), voltage (V)
 };
 Q_DECLARE_METATYPE(TelemetrySample)
 

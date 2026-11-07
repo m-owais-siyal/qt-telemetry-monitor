@@ -1,12 +1,37 @@
 #include "SequenceTracker.h"
 
-quint32 SequenceTracker::observe(quint32 sequence)
+SequenceTracker::Observation SequenceTracker::observe(quint32 sequence)
 {
-    // TODO: the first packet only initialises m_last.
-    // After that, compute the forward distance with unsigned wraparound
-    // (sequence - m_last) and decide: duplicate, in order, gap, or late.
-    Q_UNUSED(sequence);
-    return 0;
+    if (!m_hasLast) {
+        m_hasLast = true;
+        m_last = sequence;
+        ++m_received;
+        return {Kind::First, 0};
+    }
+
+    // Unsigned subtraction wraps, so (0 - 0xFFFFFFFF) == 1: one step forward.
+    const quint32 forward = sequence - m_last;
+
+    if (forward == 0)
+        return {Kind::Duplicate, 0};
+
+    if (forward < 0x80000000u) {
+        const quint32 missing = forward - 1;
+        m_lost += missing;
+        ++m_received;
+        m_last = sequence;
+        return {missing == 0 ? Kind::InOrder : Kind::Gap, missing};
+    }
+
+    // A "forward" distance in the upper half of the range means the packet is behind us.
+    const quint32 backward = m_last - sequence;
+    if (backward <= RestartThreshold)
+        return {Kind::Late, 0};
+
+    ++m_restarts;
+    ++m_received;
+    m_last = sequence;
+    return {Kind::Restart, 0};
 }
 
 double SequenceTracker::lossPercent() const
